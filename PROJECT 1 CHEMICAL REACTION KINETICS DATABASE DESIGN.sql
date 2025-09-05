@@ -12,10 +12,7 @@ GO
 USE ChemKineticsDB;
 GO
 
--- Table Creation (40 tables, reordered to respect foreign key dependencies)
--- Create tables without foreign keys first, then those with dependencies
 
--- Auxiliary Tables (10) - Create first as they are referenced by others
 CREATE TABLE ReactionTypes (
     TypeID INT PRIMARY KEY IDENTITY(1,1),
     TypeName VARCHAR(50) NOT NULL UNIQUE,
@@ -231,7 +228,7 @@ CREATE TABLE Researchers (
     Notes TEXT
 );
 
--- Core Tables (15) - Create after tables without dependencies
+
 CREATE TABLE Reactions (
     ReactionID INT PRIMARY KEY IDENTITY(1,1),
     ReactionTypeID INT FOREIGN KEY REFERENCES ReactionTypes(TypeID),
@@ -386,7 +383,7 @@ CREATE TABLE ReactionCategories (
     Notes TEXT
 );
 
--- Update ReactionCategories to add self-referencing FK after table creation
+
 ALTER TABLE ReactionCategories
 ADD CONSTRAINT FK_ReactionCategories_ParentCategoryID FOREIGN KEY (ParentCategoryID) REFERENCES ReactionCategories(CategoryID);
 
@@ -537,7 +534,7 @@ CREATE TABLE ErrorLog (
     Notes TEXT
 );
 
--- Bridge Tables (15)
+
 CREATE TABLE Reaction_Reactant (
     ReactionID INT FOREIGN KEY REFERENCES Reactions(ReactionID),
     ReactantID INT FOREIGN KEY REFERENCES Reactants(ReactantID),
@@ -1560,35 +1557,35 @@ USE ChemKineticsDB;
 GO
 
 -- 9. Locations (Auxiliary)
-INSERT INTO Locations (RefineryName, Site, Country, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Latitude, Longitude, FacilityType, Capacity, OperationalStatus, ContactPerson, ContactEmail, ContactPhone, ApprovalStatus, LastValidatedDate, Notes)
+INSERT INTO Locations (RefineryName, Site, Country, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Latitude, Longitude, FacilityType, Capacity, OperationalStatus, ContactPerson, ContactEmail, ApprovalStatus, LastValidatedDate, Notes)
 VALUES
-('Houston Refinery', 'Houston', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.7604, -95.3698, 'Refinery', 500000.0, 'Operational', 'John Smith', 'john@houstonref.com', '123-456-7890', 'Approved', '2025-09-01', 'Main refinery'),
-('Baton Rouge Plant', 'Baton Rouge', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.4515, -91.1871, 'Refinery', 400000.0, 'Operational', 'Jane Doe', 'jane@batonref.com', '234-567-8901', 'Approved', '2025-09-01', 'Secondary refinery'),
-('Galveston Facility', 'Galveston', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.3013, -94.7977, 'Pilot Plant', 100000.0, 'Operational', 'Mike Brown', 'mike@galvref.com', '345-678-9012', 'Approved', '2025-09-01', 'Pilot facility'),
-('Pasadena Refinery', 'Pasadena', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.6911, -95.2091, 'Refinery', 600000.0, 'Operational', 'Sarah Johnson', 'sarah@pasadenaref.com', '456-789-0123', 'Approved', '2025-09-01', 'Large refinery'),
-('Freeport Plant', 'Freeport', 'USA', 'Admin', '2025-09-01', NULL, NULL, 28.9541, -95.3597, 'Refinery', 450000.0, 'Operational', 'Tom Wilson', 'tom@freeportref.com', '567-890-1234', 'Approved', '2025-09-01', 'Coastal refinery'),
-('Corpus Christi Ref', 'Corpus Christi', 'USA', 'Admin', '2025-09-01', NULL, NULL, 27.8006, -97.3964, 'Refinery', 550000.0, 'Operational', 'Lisa Davis', 'lisa@corpusref.com', '678-901-2345', 'Approved', '2025-09-01', 'Major refinery'),
-('Beaumont Facility', 'Beaumont', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.0802, -94.1266, 'Refinery', 500000.0, 'Operational', 'David Lee', 'david@beaumontref.com', '789-012-3456', 'Approved', '2025-09-01', 'Refinery'),
-('Port Arthur Plant', 'Port Arthur', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.8850, -93.9399, 'Refinery', 400000.0, 'Operational', 'Emily Clark', 'emily@portarthurref.com', '890-123-4567', 'Approved', '2025-09-01', 'Refinery'),
-('Deer Park Refinery', 'Deer Park', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.7052, -95.1238, 'Refinery', 450000.0, 'Operational', 'Robert Harris', 'robert@deerparkref.com', '901-234-5678', 'Approved', '2025-09-01', 'Refinery'),
-('Texas City Plant', 'Texas City', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.3838, -94.9027, 'Refinery', 500000.0, 'Operational', 'Laura Martinez', 'laura@texascityref.com', '012-345-6789', 'Approved', '2025-09-01', 'Refinery'),
-('Baytown Refinery', 'Baytown', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.7355, -94.9774, 'Refinery', 600000.0, 'Operational', 'James White', 'james@baytownref.com', '123-456-7891', 'Approved', '2025-09-01', 'Large refinery'),
-('Lake Charles Plant', 'Lake Charles', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.2266, -93.2174, 'Refinery', 400000.0, 'Operational', 'Mary Thompson', 'mary@lakecharlesref.com', '234-567-8902', 'Approved', '2025-09-01', 'Refinery'),
-('Mobile Facility', 'Mobile', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.6954, -88.0431, 'Pilot Plant', 100000.0, 'Operational', 'Steven Walker', 'steven@mobileref.com', '345-678-9013', 'Approved', '2025-09-01', 'Pilot facility'),
-('New Orleans Ref', 'New Orleans', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.9511, -90.0715, 'Refinery', 450000.0, 'Operational', 'Jennifer Adams', 'jennifer@neworleansref.com', '456-789-0124', 'Approved', '2025-09-01', 'Refinery'),
-('Tulsa Plant', 'Tulsa', 'USA', 'Admin', '2025-09-01', NULL, NULL, 36.1540, -95.9928, 'Refinery', 400000.0, 'Operational', 'Michael Young', 'michael@tulsaref.com', '567-890-1235', 'Approved', '2025-09-01', 'Refinery'),
-('Cushing Facility', 'Cushing', 'USA', 'Admin', '2025-09-01', NULL, NULL, 35.9851, -96.7670, 'Storage', 200000.0, 'Operational', 'Patricia King', 'patricia@cushingref.com', '678-901-2346', 'Approved', '2025-09-01', 'Storage facility'),
-('Midland Refinery', 'Midland', 'USA', 'Admin', '2025-09-01', NULL, NULL, 32.0004, -102.0779, 'Refinery', 450000.0, 'Operational', 'Richard Green', 'richard@midlandref.com', '789-012-3457', 'Approved', '2025-09-01', 'Refinery'),
-('Odessa Plant', 'Odessa', 'USA', 'Admin', '2025-09-01', NULL, NULL, 31.8457, -102.3676, 'Refinery', 400000.0, 'Operational', 'Susan Hall', 'susan@odessaref.com', '890-123-4568', 'Approved', '2025-09-01', 'Refinery'),
-('El Paso Facility', 'El Paso', 'USA', 'Admin', '2025-09-01', NULL, NULL, 31.7619, -106.4850, 'Refinery', 350000.0, 'Operational', 'William Scott', 'william@elpasoref.com', '901-234-5679', 'Approved', '2025-09-01', 'Refinery'),
-('San Antonio Ref', 'San Antonio', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.4241, -98.4936, 'Refinery', 400000.0, 'Operational', 'Elizabeth Turner', 'elizabeth@sanantonioref.com', '012-345-6780', 'Approved', '2025-09-01', 'Refinery'),
-('Aransas Pass Plant', 'Aransas Pass', 'USA', 'Admin', '2025-09-01', NULL, NULL, 27.9095, -97.1500, 'Refinery', 350000.0, 'Operational', 'Thomas Allen', 'thomas@aransasref.com', '123-456-7892', 'Approved', '2025-09-01', 'Refinery'),
-('Port Lavaca Ref', 'Port Lavaca', 'USA', 'Admin', '2025-09-01', NULL, NULL, 28.6150, -96.6261, 'Refinery', 400000.0, 'Operational', 'Nancy Carter', 'nancy@portlavacaref.com', '234-567-8903', 'Approved', '2025-09-01', 'Refinery'),
-('Victoria Plant', 'Victoria', 'USA', 'Admin', '2025-09-01', NULL, NULL, 28.8053, -97.0036, 'Refinery', 350000.0, 'Operational', 'Charles Moore', 'charles@victoriaref.com', '345-678-9014', 'Approved', '2025-09-01', 'Refinery'),
-('Brownsville Facility', 'Brownsville', 'USA', 'Admin', '2025-09-01', NULL, NULL, 25.9018, -97.4975, 'Refinery', 300000.0, 'Operational', 'Linda Parker', 'linda@brownsvilleref.com', '456-789-0125', 'Approved', '2025-09-01', 'Refinery'),
-('Laredo Refinery', 'Laredo', 'USA', 'Admin', '2025-09-01', NULL, NULL, 27.5306, -99.4803, 'Refinery', 350000.0, 'Operational', 'Daniel Evans', 'daniel@laredoref.com', '567-890-1236', 'Approved', '2025-09-01', 'Refinery');
+('Houston Refinery', 'Houston', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.7604, -95.3698, 'Refinery', 500000.0, 'Operational', 'John Smith', 'john@houstonref.com', 'Approved', '2025-09-01', 'Main refinery'),
+('Baton Rouge Plant', 'Baton Rouge', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.4515, -91.1871, 'Refinery', 400000.0, 'Operational', 'Jane Doe', 'jane@batonref.com', 'Approved', '2025-09-01', 'Secondary refinery'),
+('Galveston Facility', 'Galveston', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.3013, -94.7977, 'Pilot Plant', 100000.0, 'Operational', 'Mike Brown', 'mike@galvref.com', 'Approved', '2025-09-01', 'Pilot facility'),
+('Pasadena Refinery', 'Pasadena', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.6911, -95.2091, 'Refinery', 600000.0, 'Operational', 'Sarah Johnson', 'sarah@pasadenaref.com', 'Approved', '2025-09-01', 'Large refinery'),
+('Freeport Plant', 'Freeport', 'USA', 'Admin', '2025-09-01', NULL, NULL, 28.9541, -95.3597, 'Refinery', 450000.0, 'Operational', 'Tom Wilson', 'tom@freeportref.com', 'Approved', '2025-09-01', 'Coastal refinery'),
+('Corpus Christi Ref', 'Corpus Christi', 'USA', 'Admin', '2025-09-01', NULL, NULL, 27.8006, -97.3964, 'Refinery', 550000.0, 'Operational', 'Lisa Davis', 'lisa@corpusref.com', 'Approved', '2025-09-01', 'Major refinery'),
+('Beaumont Facility', 'Beaumont', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.0802, -94.1266, 'Refinery', 500000.0, 'Operational', 'David Lee', 'david@beaumontref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Port Arthur Plant', 'Port Arthur', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.8850, -93.9399, 'Refinery', 400000.0, 'Operational', 'Emily Clark', 'emily@portarthurref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Deer Park Refinery', 'Deer Park', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.7052, -95.1238, 'Refinery', 450000.0, 'Operational', 'Robert Harris', 'robert@deerparkref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Texas City Plant', 'Texas City', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.3838, -94.9027, 'Refinery', 500000.0, 'Operational', 'Laura Martinez', 'laura@texascityref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Baytown Refinery', 'Baytown', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.7355, -94.9774, 'Refinery', 600000.0, 'Operational', 'James White', 'james@baytownref.com', 'Approved', '2025-09-01', 'Large refinery'),
+('Lake Charles Plant', 'Lake Charles', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.2266, -93.2174, 'Refinery', 400000.0, 'Operational', 'Mary Thompson', 'mary@lakecharlesref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Mobile Facility', 'Mobile', 'USA', 'Admin', '2025-09-01', NULL, NULL, 30.6954, -88.0431, 'Pilot Plant', 100000.0, 'Operational', 'Steven Walker', 'steven@mobileref.com', 'Approved', '2025-09-01', 'Pilot facility'),
+('New Orleans Ref', 'New Orleans', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.9511, -90.0715, 'Refinery', 450000.0, 'Operational', 'Jennifer Adams', 'jennifer@neworleansref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Tulsa Plant', 'Tulsa', 'USA', 'Admin', '2025-09-01', NULL, NULL, 36.1540, -95.9928, 'Refinery', 400000.0, 'Operational', 'Michael Young', 'michael@tulsaref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Cushing Facility', 'Cushing', 'USA', 'Admin', '2025-09-01', NULL, NULL, 35.9851, -96.7670, 'Storage', 200000.0, 'Operational', 'Patricia King', 'patricia@cushingref.com', 'Approved', '2025-09-01', 'Storage facility'),
+('Midland Refinery', 'Midland', 'USA', 'Admin', '2025-09-01', NULL, NULL, 32.0004, -102.0779, 'Refinery', 450000.0, 'Operational', 'Richard Green', 'richard@midlandref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Odessa Plant', 'Odessa', 'USA', 'Admin', '2025-09-01', NULL, NULL, 31.8457, -102.3676, 'Refinery', 400000.0, 'Operational', 'Susan Hall', 'susan@odessaref.com', 'Approved', '2025-09-01', 'Refinery'),
+('El Paso Facility', 'El Paso', 'USA', 'Admin', '2025-09-01', NULL, NULL, 31.7619, -106.4850, 'Refinery', 350000.0, 'Operational', 'William Scott', 'william@elpasoref.com', 'Approved', '2025-09-01', 'Refinery'),
+('San Antonio Ref', 'San Antonio', 'USA', 'Admin', '2025-09-01', NULL, NULL, 29.4241, -98.4936, 'Refinery', 400000.0, 'Operational', 'Elizabeth Turner', 'elizabeth@sanantonioref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Aransas Pass Plant', 'Aransas Pass', 'USA', 'Admin', '2025-09-01', NULL, NULL, 27.9095, -97.1500, 'Refinery', 350000.0, 'Operational', 'Thomas Allen', 'thomas@aransasref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Port Lavaca Ref', 'Port Lavaca', 'USA', 'Admin', '2025-09-01', NULL, NULL, 28.6150, -96.6261, 'Refinery', 400000.0, 'Operational', 'Nancy Carter', 'nancy@portlavacaref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Victoria Plant', 'Victoria', 'USA', 'Admin', '2025-09-01', NULL, NULL, 28.8053, -97.0036, 'Refinery', 350000.0, 'Operational', 'Charles Moore', 'charles@victoriaref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Brownsville Facility', 'Brownsville', 'USA', 'Admin', '2025-09-01', NULL, NULL, 25.9018, -97.4975, 'Refinery', 300000.0, 'Operational', 'Linda Parker', 'linda@brownsvilleref.com', 'Approved', '2025-09-01', 'Refinery'),
+('Laredo Refinery', 'Laredo', 'USA', 'Admin', '2025-09-01', NULL, NULL, 27.5306, -99.4803, 'Refinery', 350000.0, 'Operational', 'Daniel Evans', 'daniel@laredoref.com', 'Approved', '2025-09-01', 'Refinery');-- 10. Researchers (Auxiliary)
 
--- 10. Researchers (Auxiliary)
+
 INSERT INTO Researchers (Name, Department, Contact, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, EmployeeID, ExpertiseArea, YearsExperience, Certification, SecurityClearance, ApprovalStatus, LastValidatedDate, OfficeLocation, ContactPhone, Notes)
 VALUES
 ('John Smith', 'R&D', 'john.smith@refinery.com', 'Admin', '2025-09-01', NULL, NULL, 'EMP001', 'Catalysis', 10, 'PhD Chem', 'Level 1', 'Approved', '2025-09-01', 'Houston', '123-456-7890', 'Lead researcher'),
@@ -1678,31 +1675,35 @@ VALUES
 -- 13. Products (Core)
 INSERT INTO Products (Name, MolecularFormula, MolecularWeight, CASNumber, Purity, Density, BoilingPoint, MeltingPoint, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsHazardous, StorageConditions, SupplierContact, SafetyDataSheetURL, ApprovalStatus, LastValidatedDate)
 VALUES
-('Polyethylene', 'C2H4', 28.05, '9002-88-4', 99.5, 0.950, NULL, 130.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemcorp.com', 'http://example.com/sds26', 'Approved', '2025-09-01'),
-('Polypropylene', 'C3H6', 42.08, '9003-07-0', 99.0, 0.905, NULL, 160.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@petrochem.com', 'http://example.com/sds27', 'Approved', '2025-09-01'),
-('Gasoline', 'C6-C12', 100.00, '8006-61-9', 99.8, 0.740, 40.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@chemsupply.com', 'http://example.com/sds28', 'Approved', '2025-09-01'),
-('Diesel', 'C12-C20', 200.00, '68334-30-5', 99.7, 0.830, 180.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@industchem.com', 'http://example.com/sds29', 'Approved', '2025-09-01'),
+('Polyethylene', '(C2H4)n', 28.05, '9002-88-4', 99.5, 0.950, NULL, 130.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemcorp.com', 'http://example.com/sds26', 'Approved', '2025-09-01'),
+('Polypropylene', '(C3H6)n', 42.08, '9003-07-0', 99.0, 0.905, NULL, 160.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@petrochem.com', 'http://example.com/sds27', 'Approved', '2025-09-01'),
+('Gasoline', 'CnH2n+2', 100.00, '8006-61-9', 99.8, 0.740, 40.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@chemsupply.com', 'http://example.com/sds28', 'Approved', '2025-09-01'),
+('Diesel', 'CnH2n+2', 200.00, '68334-30-5', 99.7, 0.830, 180.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@industchem.com', 'http://example.com/sds29', 'Approved', '2025-09-01'),
 ('Ethyl Acetate', 'C4H8O2', 88.11, '141-78-6', 99.9, 0.902, 77.1, -83.6, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store away from heat', 'contact@synthochem.com', 'http://example.com/sds30', 'Approved', '2025-09-01'),
 ('Methyl Acetate', 'C3H6O2', 74.08, '79-20-9', 99.8, 0.934, 57.1, -98.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@chemcorp.com', 'http://example.com/sds31', 'Approved', '2025-09-01'),
 ('Butanol', 'C4H10O', 74.12, '71-36-3', 99.5, 0.810, 117.7, -89.8, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@petrochem.com', 'http://example.com/sds32', 'Approved', '2025-09-01'),
 ('Propylene Glycol', 'C3H8O2', 76.09, '57-55-6', 99.0, 1.036, 188.2, -59.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemsupply.com', 'http://example.com/sds33', 'Approved', '2025-09-01'),
-('Polystyrene', 'C8H8', 104.15, '9003-53-6', 99.5, 1.050, NULL, 240.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@industchem.com', 'http://example.com/sds34', 'Approved', '2025-09-01'),
+('Polystyrene', '(C8H8)n', 104.15, '9003-53-6', 99.5, 1.050, NULL, 240.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@industchem.com', 'http://example.com/sds34', 'Approved', '2025-09-01'),
 ('Ethylbenzene', 'C8H10', 106.17, '100-41-4', 99.7, 0.867, 136.2, -95.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@synthochem.com', 'http://example.com/sds35', 'Approved', '2025-09-01'),
 ('Xylene', 'C8H10', 106.17, '1330-20-7', 99.6, 0.864, 138.4, -47.9, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@chemcorp.com', 'http://example.com/sds36', 'Approved', '2025-09-01'),
-('Methanol', 'CH3OH', 32.04, '67-56-1', 99.8, 0.792, 64.7, -97.6, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store away from heat', 'contact@petrochem.com', 'http://example.com/sds37', 'Approved', '2025-09-01'),
-('Ethanol', 'C2H5OH', 46.07, '64-17-5', 99.9, 0.789, 78.4, -114.1, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@chemsupply.com', 'http://example.com/sds38', 'Approved', '2025-09-01'),
+('Methanol', 'CH4O', 32.04, '67-56-1', 99.8, 0.792, 64.7, -97.6, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store away from heat', 'contact@petrochem.com', 'http://example.com/sds37', 'Approved', '2025-09-01'),
+('Ethanol', 'C2H6O', 46.07, '64-17-5', 99.9, 0.789, 78.4, -114.1, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@chemsupply.com', 'http://example.com/sds38', 'Approved', '2025-09-01'),
 ('Acetone', 'C3H6O', 58.08, '67-64-1', 99.9, 0.785, 56.0, -94.7, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@industchem.com', 'http://example.com/sds39', 'Approved', '2025-09-01'),
 ('Vinyl Acetate', 'C4H6O2', 86.09, '108-05-4', 99.5, 0.934, 72.7, -93.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@synthochem.com', 'http://example.com/sds40', 'Approved', '2025-09-01'),
-('Polyvinyl Chloride', 'C2H3Cl', 62.50, '9002-86-2', 99.5, 1.400, NULL, 80.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemcorp.com', 'http://example.com/sds41', 'Approved', '2025-09-01'),
+('Polyvinyl Chloride', '(C2H3Cl)n', 62.50, '9002-86-2', 99.5, 1.400, NULL, 80.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemcorp.com', 'http://example.com/sds41', 'Approved', '2025-09-01'),
 ('Ethylene Glycol', 'C2H6O2', 62.07, '107-21-1', 99.8, 1.113, 197.3, -12.9, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'contact@petrochem.com', 'http://example.com/sds42', 'Approved', '2025-09-01'),
 ('Propylene Oxide', 'C3H6O', 58.08, '75-56-9', 99.6, 0.830, 34.3, -112.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@chemsupply.com', 'http://example.com/sds43', 'Approved', '2025-09-01'),
-('Butadiene Rubber', 'C4H6', 54.09, '9003-17-2', 99.0, 0.900, NULL, -80.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@industchem.com', 'http://example.com/sds44', 'Approved', '2025-09-01'),
-('Isoprene Rubber', 'C5H8', 68.12, '9003-31-0', 99.5, 0.920, NULL, -70.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@synthochem.com', 'http://example.com/sds45', 'Approved', '2025-09-01'),
-('Chloroprene Rubber', 'C4H5Cl', 88.54, '9002-98-6', 99.5, 1.230, NULL, -40.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemcorp.com', 'http://example.com/sds46', 'Approved', '2025-09-01'),
-('Acrylonitrile Polymer', 'C3H3N', 53.06, '9003-56-9', 99.8, 1.150, NULL, 90.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@petrochem.com', 'http://example.com/sds47', 'Approved', '2025-09-01'),
-('Kerosene', 'C10-C16', 150.00, '8008-20-6', 99.7, 0.800, 150.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@chemsupply.com', 'http://example.com/sds48', 'Approved', '2025-09-01'),
-('Lubricating Oil', 'C20-C40', 400.00, '8012-95-1', 99.5, 0.850, 300.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in cool area', 'contact@industchem.com', 'http://example.com/sds49', 'Approved', '2025-09-01'),
-('Asphalt', 'C40+', 500.00, '8052-42-4', 99.0, 1.000, NULL, 100.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@synthochem.com', 'http://example.com/sds50', 'Approved', '2025-09-01');
+('Butadiene Rubber', '(C4H6)n', 54.09, '9003-17-2', 99.0, 0.900, NULL, -80.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@industchem.com', 'http://example.com/sds44', 'Approved', '2025-09-01'),
+('Isoprene Rubber', '(C5H8)n', 68.12, '9003-31-0', 99.5, 0.920, NULL, -70.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@synthochem.com', 'http://example.com/sds45', 'Approved', '2025-09-01'),
+('Chloroprene Rubber', '(C4H5Cl)n', 88.54, '9002-98-6', 99.5, 1.230, NULL, -40.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@chemcorp.com', 'http://example.com/sds46', 'Approved', '2025-09-01'),
+('Acrylonitrile Polymer', '(C3H3N)n', 53.06, '9003-56-9', 99.8, 1.150, NULL, 90.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@petrochem.com', 'http://example.com/sds47', 'Approved', '2025-09-01'),
+('Kerosene', 'CnH2n+2', 150.00, '8008-20-6', 99.7, 0.800, 150.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'contact@chemsupply.com', 'http://example.com/sds48', 'Approved', '2025-09-01'),
+('Lubricating Oil', 'CnH2n+2', 400.00, '8012-95-1', 99.5, 0.850, 300.0, NULL, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in cool area', 'contact@industchem.com', 'http://example.com/sds49', 'Approved', '2025-09-01'),
+('Asphalt', 'CnH2n+2', 500.00, '8052-42-4', 99.0, 1.000, NULL, 100.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Store in dry area', 'contact@synthochem.com', 'http://example.com/sds50', 'Approved', '2025-09-01');
+
+
+DELETE FROM Products;
+DBCC CHECKIDENT ('Products', RESEED, 0);
 
 -- 14. Catalysts (Core)
 INSERT INTO Catalysts (Name, Composition, SupplierID, CASNumber, SurfaceArea, ParticleSize, ActivityLevel, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsReusable, StorageConditions, CostPerUnit, SafetyDataSheetURL, ApprovalStatus, LastValidatedDate, CatalystType)
@@ -1793,711 +1794,34 @@ VALUES
 (13, 'Pressure', 15.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'http://example.com/cond26', 'Critical parameter');
 
 -- 17. Equipment (Core)
-INSERT INTO Equipment (Name, Type, Manufacturer, Model, LocationID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Status, LastMaintenanceDate, CalibrationFrequencyMonths, Capacity, OperationalRangeMin, OperationalRangeMax, SafetyRating, ApprovalStatus, LastValidatedDate, Notes)
+INSERT INTO Equipment (Name, Type, CalibrationDate, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Manufacturer, Model, SerialNumber, MaintenanceSchedule, OperationalStatus, Cost, LocationID, ApprovalStatus, LastValidatedDate, Notes)
 VALUES
-('Reactor A', 'Batch Reactor', 'ChemTech', 'BR-100', 1, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 1000.0, 200.0, 500.0, 5, 'Approved', '2025-09-01', 'Main reactor'),
-('Reactor B', 'Continuous Reactor', 'PetroEquip', 'CR-200', 2, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 2000.0, 300.0, 600.0, 4, 'Approved', '2025-09-01', 'High-capacity reactor'),
-('Spectrometer X', 'Spectrometer', 'Analytix', 'SP-300', 3, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Chromatograph Y', 'Gas Chromatograph', 'ChemSys', 'GC-400', 4, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Pump Z', 'Centrifugal Pump', 'FlowTech', 'CP-500', 5, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 500.0, NULL, NULL, 4, 'Approved', '2025-09-01', 'Fluid transfer'),
-('Heater H1', 'Heater', 'ThermCo', 'TH-600', 6, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, NULL, 100.0, 700.0, 5, 'Approved', '2025-09-01', 'Temperature control'),
-('Cooler C1', 'Cooler', 'CoolTech', 'CL-700', 7, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, NULL, -50.0, 100.0, 5, 'Approved', '2025-09-01', 'Temperature control'),
-('Reactor C', 'Batch Reactor', 'ChemTech', 'BR-101', 8, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 1000.0, 200.0, 500.0, 5, 'Approved', '2025-09-01', 'Secondary reactor'),
-('Reactor D', 'Continuous Reactor', 'PetroEquip', 'CR-201', 9, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 2000.0, 300.0, 600.0, 4, 'Approved', '2025-09-01', 'High-capacity reactor'),
-('Spectrometer Z', 'Spectrometer', 'Analytix', 'SP-301', 10, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Chromatograph W', 'Gas Chromatograph', 'ChemSys', 'GC-401', 11, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Pump X', 'Centrifugal Pump', 'FlowTech', 'CP-501', 12, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 500.0, NULL, NULL, 4, 'Approved', '2025-09-01', 'Fluid transfer'),
-('Heater H2', 'Heater', 'ThermCo', 'TH-601', 13, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, NULL, 100.0, 700.0, 5, 'Approved', '2025-09-01', 'Temperature control'),
-('Cooler C2', 'Cooler', 'CoolTech', 'CL-701', 14, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, NULL, -50.0, 100.0, 5, 'Approved', '2025-09-01', 'Temperature control'),
-('Reactor E', 'Batch Reactor', 'ChemTech', 'BR-102', 15, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 1000.0, 200.0, 500.0, 5, 'Approved', '2025-09-01', 'Main reactor'),
-('Reactor F', 'Continuous Reactor', 'PetroEquip', 'CR-202', 16, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 2000.0, 300.0, 600.0, 4, 'Approved', '2025-09-01', 'High-capacity reactor'),
-('Spectrometer V', 'Spectrometer', 'Analytix', 'SP-302', 17, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Chromatograph U', 'Gas Chromatograph', 'ChemSys', 'GC-402', 18, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Pump Y', 'Centrifugal Pump', 'FlowTech', 'CP-502', 19, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 500.0, NULL, NULL, 4, 'Approved', '2025-09-01', 'Fluid transfer'),
-('Heater H3', 'Heater', 'ThermCo', 'TH-602', 20, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, NULL, 100.0, 700.0, 5, 'Approved', '2025-09-01', 'Temperature control'),
-('Cooler C3', 'Cooler', 'CoolTech', 'CL-702', 21, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, NULL, -50.0, 100.0, 5, 'Approved', '2025-09-01', 'Temperature control'),
-('Reactor G', 'Batch Reactor', 'ChemTech', 'BR-103', 22, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 1000.0, 200.0, 500.0, 5, 'Approved', '2025-09-01', 'Main reactor'),
-('Reactor H', 'Continuous Reactor', 'PetroEquip', 'CR-203', 23, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 6, 2000.0, 300.0, 600.0, 4, 'Approved', '2025-09-01', 'High-capacity reactor'),
-('Spectrometer T', 'Spectrometer', 'Analytix', 'SP-303', 24, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment'),
-('Chromatograph S', 'Gas Chromatograph', 'ChemSys', 'GC-403', 25, 'Admin', '2025-09-01', NULL, NULL, 'Operational', '2025-08-01', 3, NULL, NULL, NULL, 5, 'Approved', '2025-09-01', 'Analytical equipment');
+('Reactor A', 'Batch Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemTech', 'BR-100', 'SN-1001', 'Every 6 months', 'Operational', 100000.00, 1, 'Approved', '2025-09-01', 'Main reactor'),
+('Reactor B', 'Continuous Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'PetroEquip', 'CR-200', 'SN-1002', 'Every 6 months', 'Operational', 150000.00, 2, 'Approved', '2025-09-01', 'High-capacity reactor'),
+('Spectrometer X', 'Spectrometer', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'Analytix', 'SP-300', 'SN-1003', 'Every 3 months', 'Operational', 75000.00, 3, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Chromatograph Y', 'Gas Chromatograph', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemSys', 'GC-400', 'SN-1004', 'Every 3 months', 'Operational', 80000.00, 4, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Pump Z', 'Centrifugal Pump', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'FlowTech', 'CP-500', 'SN-1005', 'Every 6 months', 'Operational', 50000.00, 5, 'Approved', '2025-09-01', 'Fluid transfer'),
+('Heater H1', 'Heater', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ThermCo', 'TH-600', 'SN-1006', 'Every 6 months', 'Operational', 60000.00, 6, 'Approved', '2025-09-01', 'Temperature control'),
+('Cooler C1', 'Cooler', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'CoolTech', 'CL-700', 'SN-1007', 'Every 6 months', 'Operational', 55000.00, 7, 'Approved', '2025-09-01', 'Temperature control'),
+('Reactor C', 'Batch Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemTech', 'BR-101', 'SN-1008', 'Every 6 months', 'Operational', 100000.00, 8, 'Approved', '2025-09-01', 'Secondary reactor'),
+('Reactor D', 'Continuous Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'PetroEquip', 'CR-201', 'SN-1009', 'Every 6 months', 'Operational', 150000.00, 9, 'Approved', '2025-09-01', 'High-capacity reactor'),
+('Spectrometer Z', 'Spectrometer', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'Analytix', 'SP-301', 'SN-1010', 'Every 3 months', 'Operational', 75000.00, 10, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Chromatograph W', 'Gas Chromatograph', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemSys', 'GC-401', 'SN-1011', 'Every 3 months', 'Operational', 80000.00, 11, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Pump X', 'Centrifugal Pump', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'FlowTech', 'CP-501', 'SN-1012', 'Every 6 months', 'Operational', 50000.00, 12, 'Approved', '2025-09-01', 'Fluid transfer'),
+('Heater H2', 'Heater', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ThermCo', 'TH-601', 'SN-1013', 'Every 6 months', 'Operational', 60000.00, 13, 'Approved', '2025-09-01', 'Temperature control'),
+('Cooler C2', 'Cooler', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'CoolTech', 'CL-701', 'SN-1014', 'Every 6 months', 'Operational', 55000.00, 14, 'Approved', '2025-09-01', 'Temperature control'),
+('Reactor E', 'Batch Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemTech', 'BR-102', 'SN-1015', 'Every 6 months', 'Operational', 100000.00, 15, 'Approved', '2025-09-01', 'Main reactor'),
+('Reactor F', 'Continuous Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'PetroEquip', 'CR-202', 'SN-1016', 'Every 6 months', 'Operational', 150000.00, 16, 'Approved', '2025-09-01', 'High-capacity reactor'),
+('Spectrometer V', 'Spectrometer', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'Analytix', 'SP-302', 'SN-1017', 'Every 3 months', 'Operational', 75000.00, 17, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Chromatograph U', 'Gas Chromatograph', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemSys', 'GC-402', 'SN-1018', 'Every 3 months', 'Operational', 80000.00, 18, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Pump Y', 'Centrifugal Pump', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'FlowTech', 'CP-502', 'SN-1019', 'Every 6 months', 'Operational', 50000.00, 19, 'Approved', '2025-09-01', 'Fluid transfer'),
+('Heater H3', 'Heater', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ThermCo', 'TH-602', 'SN-1020', 'Every 6 months', 'Operational', 60000.00, 20, 'Approved', '2025-09-01', 'Temperature control'),
+('Cooler C3', 'Cooler', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'CoolTech', 'CL-702', 'SN-1021', 'Every 6 months', 'Operational', 55000.00, 21, 'Approved', '2025-09-01', 'Temperature control'),
+('Reactor G', 'Batch Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemTech', 'BR-103', 'SN-1022', 'Every 6 months', 'Operational', 100000.00, 22, 'Approved', '2025-09-01', 'Main reactor'),
+('Reactor H', 'Continuous Reactor', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'PetroEquip', 'CR-203', 'SN-1023', 'Every 6 months', 'Operational', 150000.00, 23, 'Approved', '2025-09-01', 'High-capacity reactor'),
+('Spectrometer T', 'Spectrometer', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'Analytix', 'SP-303', 'SN-1024', 'Every 3 months', 'Operational', 75000.00, 24, 'Approved', '2025-09-01', 'Analytical equipment'),
+('Chromatograph S', 'Gas Chromatograph', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'ChemSys', 'GC-403', 'SN-1025', 'Every 3 months', 'Operational', 80000.00, 25, 'Approved', '2025-09-01', 'Analytical equipment');
 
--- 18. Byproducts (Core)
-INSERT INTO Byproducts (Name, MolecularFormula, MolecularWeight, CASNumber, ReactionID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsHazardous, DisposalInstructions, ApprovalStatus, LastValidatedDate, SafetyDataSheetURL, Notes)
-VALUES
-('Carbon Dioxide', 'CO2', 44.01, '124-38-9', 1, 'Admin', '2025-09-01', NULL, NULL, 0, 'Vent to atmosphere', 'Approved', '2025-09-01', 'http://example.com/sds76', 'Common byproduct'),
-('Water', 'H2O', 18.02, '7732-18-5', 2, 'Admin', '2025-09-01', NULL, NULL, 0, 'Safe disposal', 'Approved', '2025-09-01', 'http://example.com/sds77', 'Non-hazardous'),
-('Carbon Monoxide', 'CO', 28.01, '630-08-0', 3, 'Admin', '2025-09-01', NULL, NULL, 1, 'Vent with caution', 'Approved', '2025-09-01', 'http://example.com/sds78', 'Toxic gas'),
-('Sulfur Dioxide', 'SO2', 64.06, '7446-09-5', 4, 'Admin', '2025-09-01', NULL, NULL, 1, 'Neutralize before disposal', 'Approved', '2025-09-01', 'http://example.com/sds79', 'Corrosive gas'),
-('Hydrogen Sulfide', 'H2S', 34.08, '7783-06-4', 5, 'Admin', '2025-09-01', NULL, NULL, 1, 'Scrub before disposal', 'Approved', '2025-09-01', 'http://example.com/sds80', 'Highly toxic'),
-('Ammonia', 'NH3', 17.03, '7664-41-7', 6, 'Admin', '2025-09-01', NULL, NULL, 1, 'Neutralize before disposal', 'Approved', '2025-09-01', 'http://example.com/sds81', 'Corrosive gas'),
-('Methane', 'CH4', 16.04, '74-82-8', 7, 'Admin', '2025-09-01', NULL, NULL, 1, 'Vent with caution', 'Approved', '2025-09-01', 'http://example.com/sds82', 'Flammable gas'),
-('Ethane', 'C2H6', 30.07, '74-84-0', 8, 'Admin', '2025-09-01', NULL, NULL, 1, 'Vent with caution', 'Approved', '2025-09-01', 'http://example.com/sds83', 'Flammable gas'),
-('Propane', 'C3H8', 44.10, '74-98-6', 9, 'Admin', '2025-09-01', NULL, NULL, 1, 'Vent with caution', 'Approved', '2025-09-01', 'http://example.com/sds84', 'Flammable gas'),
-('Butane', 'C4H10', 58.12, '106-97-8', 10, 'Admin', '2025-09-01', NULL, NULL, 1, 'Vent with caution', 'Approved', '2025-09-01', 'http://example.com/sds85', 'Flammable gas'),
-('Nitrogen Oxides', 'NOx', 46.01, '10102-43-9', 11, 'Admin', '2025-09-01', NULL, NULL, 1, 'Scrub before disposal', 'Approved', '2025-09-01', 'http://example.com/sds86', 'Toxic gas'),
-('Sulfuric Acid', 'H2SO4', 98.08, '7664-93-9', 12, 'Admin', '2025-09-01', NULL, NULL, 1, 'Neutralize before disposal', 'Approved', '2025-09-01', 'http://example.com/sds87', 'Corrosive liquid'),
-('Hydrochloric Acid', 'HCl', 36.46, '7647-01-0', 13, 'Admin', '2025-09-01', NULL, NULL, 1, 'Neutralize before disposal', 'Approved', '2025-09-01', 'http://example.com/sds88', 'Corrosive liquid'),
-('Sodium Chloride', 'NaCl', 58.44, '7647-14-5', 14, 'Admin', '2025-09-01', NULL, NULL, 0, 'Safe disposal', 'Approved', '2025-09-01', 'http://example.com/sds89', 'Non-hazardous'),
-('Calcium Carbonate', 'CaCO3', 100.09, '471-34-1', 15, 'Admin', '2025-09-01', NULL, NULL, 0, 'Safe disposal', 'Approved', '2025-09-01', 'http://example.com/sds90', 'Non-hazardous'),
-('Ethanol', 'C2H5OH', 46.07, '64-17-5', 16, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store away from heat', 'Approved', '2025-09-01', 'http://example.com/sds91', 'Flammable liquid'),
-('Methanol', 'CH3OH', 32.04, '67-56-1', 17, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store away from heat', 'Approved', '2025-09-01', 'http://example.com/sds92', 'Flammable liquid'),
-('Acetic Acid', 'C2H4O2', 60.05, '64-19-7', 18, 'Admin', '2025-09-01', NULL, NULL, 1, 'Neutralize before disposal', 'Approved', '2025-09-01', 'http://example.com/sds93', 'Corrosive liquid'),
-('Formaldehyde', 'CH2O', 30.03, '50-00-0', 19, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'Approved', '2025-09-01', 'http://example.com/sds94', 'Toxic liquid'),
-('Acetone', 'C3H6O', 58.08, '67-64-1', 20, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store away from heat', 'Approved', '2025-09-01', 'http://example.com/sds95', 'Flammable liquid'),
-('Benzene', 'C6H6', 78.11, '71-43-2', 21, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in sealed container', 'Approved', '2025-09-01', 'http://example.com/sds96', 'Toxic liquid'),
-('Toluene', 'C7H8', 92.14, '108-88-3', 22, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in cool area', 'Approved', '2025-09-01', 'http://example.com/sds97', 'Flammable liquid'),
-('Xylene', 'C8H10', 106.17, '1330-20-7', 23, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store in ventilated area', 'Approved', '2025-09-01', 'http://example.com/sds98', 'Flammable liquid'),
-('Ethylene', 'C2H4', 28.05, '74-85-1', 24, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store under pressure', 'Approved', '2025-09-01', 'http://example.com/sds99', 'Flammable gas'),
-('Propylene', 'C3H6', 42.08, '115-07-1', 25, 'Admin', '2025-09-01', NULL, NULL, 1, 'Store under pressure', 'Approved', '2025-09-01', 'http://example.com/sds100', 'Flammable gas');
-
--- 19. ReactionMechanisms (Core)
-INSERT INTO ReactionMechanisms (ReactionID, MechanismDescription, StepCount, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsValidated, ValidationDate, DocumentationURL, Notes)
-VALUES
-(1, 'Radical chain mechanism for catalytic cracking', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech1', 'Well-characterized'),
-(2, 'Cationic polymerization mechanism', 4, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech2', 'Stable mechanism'),
-(3, 'Hydrogen addition via metal catalyst', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech3', 'High efficiency'),
-(4, 'Catalytic reforming via dehydrogenation', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech4', 'Optimized process'),
-(5, 'Oxidation via radical intermediates', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech5', 'Controlled reaction'),
-(6, 'Isomerization via carbocation rearrangement', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech6', 'Stable mechanism'),
-(7, 'Alkylation via electrophilic addition', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech7', 'High selectivity'),
-(8, 'Dehydrogenation via metal catalyst', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech8', 'Efficient process'),
-(9, 'Esterification via nucleophilic substitution', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech9', 'Well-characterized'),
-(10, 'Hydrolysis via nucleophilic attack', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech10', 'Stable mechanism'),
-(11, 'Condensation via dehydration', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech11', 'Controlled reaction'),
-(12, 'Neutralization via proton transfer', 1, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech12', 'Simple mechanism'),
-(13, 'Saponification via nucleophilic attack', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech13', 'Stable mechanism'),
-(14, 'Desulfurization via hydrogenolysis', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech14', 'Efficient process'),
-(15, 'Amination via nucleophilic substitution', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech15', 'High yield'),
-(16, 'Halogenation via electrophilic addition', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech16', 'Controlled reaction'),
-(17, 'Nitration via electrophilic substitution', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech17', 'High selectivity'),
-(18, 'Sulfonation via electrophilic substitution', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech18', 'Stable mechanism'),
-(19, 'Fermentation via enzymatic catalysis', 5, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech19', 'Complex mechanism'),
-(20, 'Photochemical reaction via excitation', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech20', 'Light-driven'),
-(21, 'Electrochemical reaction via electron transfer', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech21', 'Controlled reaction'),
-(22, 'Reduction via electron addition', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech22', 'High efficiency'),
-(23, 'Hydroformylation via metal catalysis', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech23', 'Stable mechanism'),
-(24, 'Acylation via electrophilic substitution', 3, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech24', 'Controlled reaction'),
-(25, 'Dehydration via elimination', 2, 'Admin', '2025-09-01', NULL, NULL, 1, '2025-09-01', 'http://example.com/mech25', 'High yield');
-
--- 20. ReactionKinetics (Core)
-INSERT INTO ReactionKinetics (ReactionID, RateLaw, RateConstant, ActivationEnergy, PreExponentialFactor, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Temperature, Pressure, ValidationStatus, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-(1, 'k[A]^2', 0.567, 50.0, 1.0E8, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Second-order kinetics'),
-(2, 'k[A][B]', 0.678, 45.0, 2.0E8, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'Bimolecular reaction'),
-(3, 'k[A]', 0.789, 40.0, 3.0E8, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(4, 'k[A]^2', 0.890, 55.0, 4.0E8, 'Admin', '2025-09-01', NULL, NULL, 450.0, 20.0, 'Validated', 'Approved', '2025-09-01', 'High activation energy'),
-(5, 'k[A][B]', 0.901, 50.0, 5.0E8, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Stable kinetics'),
-(6, 'k[A]', 0.912, 45.0, 6.0E8, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(7, 'k[A][B]', 0.923, 40.0, 7.0E8, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'Bimolecular reaction'),
-(8, 'k[A]^2', 0.934, 50.0, 8.0E8, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Second-order kinetics'),
-(9, 'k[A][B]', 0.945, 45.0, 9.0E8, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'Stable kinetics'),
-(10, 'k[A]', 0.956, 40.0, 1.0E9, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(11, 'k[A][B]', 0.967, 50.0, 1.1E9, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Bimolecular reaction'),
-(12, 'k[A]', 0.978, 45.0, 1.2E9, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(13, 'k[A][B]', 0.989, 40.0, 1.3E9, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'Stable kinetics'),
-(14, 'k[A]^2', 1.000, 50.0, 1.4E9, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Second-order kinetics'),
-(15, 'k[A][B]', 1.011, 45.0, 1.5E9, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'Bimolecular reaction'),
-(16, 'k[A]', 1.022, 40.0, 1.6E9, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(17, 'k[A][B]', 1.033, 50.0, 1.7E9, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Stable kinetics'),
-(18, 'k[A]^2', 1.044, 45.0, 1.8E9, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'Second-order kinetics'),
-(19, 'k[A]', 1.055, 40.0, 1.9E9, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(20, 'k[A][B]', 1.066, 50.0, 2.0E9, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Bimolecular reaction'),
-(21, 'k[A]', 1.077, 45.0, 2.1E9, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics'),
-(22, 'k[A][B]', 1.088, 40.0, 2.2E9, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'Stable kinetics'),
-(23, 'k[A]^2', 1.099, 50.0, 2.3E9, 'Admin', '2025-09-01', NULL, NULL, 400.0, 5.0, 'Validated', 'Approved', '2025-09-01', 'Second-order kinetics'),
-(24, 'k[A][B]', 1.110, 45.0, 2.4E9, 'Admin', '2025-09-01', NULL, NULL, 350.0, 10.0, 'Validated', 'Approved', '2025-09-01', 'Bimolecular reaction'),
-(25, 'k[A]', 1.121, 40.0, 2.5E9, 'Admin', '2025-09-01', NULL, NULL, 300.0, 15.0, 'Validated', 'Approved', '2025-09-01', 'First-order kinetics');
-
--- 21. SafetyIncidents (Core)
-INSERT INTO SafetyIncidents (ExperimentID, IncidentDate, Description, Severity, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, CorrectiveAction, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-(1, '2025-09-01', 'Minor pressure spike', 2, 'Admin', '2025-09-01', NULL, NULL, 'Adjusted pressure regulator', 'Approved', '2025-09-01', 'Resolved'),
-(2, '2025-09-02', 'Temperature overshoot', 3, 'Admin', '2025-09-01', NULL, NULL, 'Recalibrated heater', 'Approved', '2025-09-01', 'No damage'),
-(3, '2025-09-03', 'Small leak detected', 2, 'Admin', '2025-09-01', NULL, NULL, 'Sealed connection', 'Approved', '2025-09-01', 'Resolved'),
-(4, '2025-09-04', 'Equipment malfunction', 3, 'Admin', '2025-09-01', NULL, NULL, 'Replaced faulty valve', 'Approved', '2025-09-01', 'No injuries'),
-(5, '2025-09-05', 'Chemical spill', 4, 'Admin', '2025-09-01', NULL, NULL, 'Cleaned and neutralized', 'Approved', '2025-09-01', 'Contained'),
-(6, '2025-09-06', 'Minor explosion', 4, 'Admin', '2025-09-01', NULL, NULL, 'Revised safety protocols', 'Approved', '2025-09-01', 'No injuries'),
-(7, '2025-09-07', 'Pressure drop', 2, 'Admin', '2025-09-01', NULL, NULL, 'Checked pump', 'Approved', '2025-09-01', 'Resolved'),
-(8, '2025-09-08', 'Temperature fluctuation', 3, 'Admin', '2025-09-01', NULL, NULL, 'Recalibrated controls', 'Approved', '2025-09-01', 'Stable now'),
-(9, '2025-09-09', 'Gas leak', 3, 'Admin', '2025-09-01', NULL, NULL, 'Repaired pipeline', 'Approved', '2025-09-01', 'Contained'),
-(10, '2025-09-10', 'Equipment failure', 3, 'Admin', '2025-09-01', NULL, NULL, 'Replaced component', 'Approved', '2025-09-01', 'Operational'),
-(11, '2025-09-11', 'Overheating', 3, 'Admin', '2025-09-01', NULL, NULL, 'Adjusted cooling system', 'Approved', '2025-09-01', 'Resolved'),
-(12, '2025-09-12', 'Minor fire', 4, 'Admin', '2025-09-01', NULL, NULL, 'Extinguished and reviewed', 'Approved', '2025-09-01', 'No injuries'),
-(13, '2025-09-13', 'Pressure surge', 2, 'Admin', '2025-09-01', NULL, NULL, 'Adjusted regulator', 'Approved', '2025-09-01', 'Stable'),
-(14, '2025-09-14', 'Chemical exposure', 4, 'Admin', '2025-09-01', NULL, NULL, 'Improved ventilation', 'Approved', '2025-09-01', 'Contained'),
-(15, '2025-09-15', 'Equipment jam', 2, 'Admin', '2025-09-01', NULL, NULL, 'Cleared obstruction', 'Approved', '2025-09-01', 'Resolved'),
-(16, '2025-09-16', 'Gas release', 3, 'Admin', '2025-09-01', NULL, NULL, 'Sealed valve', 'Approved', '2025-09-01', 'No injuries'),
-(17, '2025-09-17', 'Temperature spike', 3, 'Admin', '2025-09-01', NULL, NULL, 'Recalibrated heater', 'Approved', '2025-09-01', 'Stable'),
-(18, '2025-09-18', 'Minor spill', 2, 'Admin', '2025-09-01', NULL, NULL, 'Cleaned and neutralized', 'Approved', '2025-09-01', 'Contained'),
-(19, '2025-09-19', 'Equipment malfunction', 3, 'Admin', '2025-09-01', NULL, NULL, 'Repaired component', 'Approved', '2025-09-01', 'Operational'),
-(20, '2025-09-20', 'Pressure drop', 2, 'Admin', '2025-09-01', NULL, NULL, 'Checked pump', 'Approved', '2025-09-01', 'Resolved'),
-(21, '2025-09-21', 'Temperature overshoot', 3, 'Admin', '2025-09-01', NULL, NULL, 'Recalibrated controls', 'Approved', '2025-09-01', 'Stable'),
-(22, '2025-09-22', 'Small leak', 2, 'Admin', '2025-09-01', NULL, NULL, 'Sealed connection', 'Approved', '2025-09-01', 'Resolved'),
-(23, '2025-09-23', 'Chemical spill', 4, 'Admin', '2025-09-01', NULL, NULL, 'Cleaned and neutralized', 'Approved', '2025-09-01', 'Contained'),
-(24, '2025-09-24', 'Equipment failure', 3, 'Admin', '2025-09-01', NULL, NULL, 'Replaced component', 'Approved', '2025-09-01', 'Operational'),
-(25, '2025-09-25', 'Minor explosion', 4, 'Admin', '2025-09-01', NULL, NULL, 'Revised safety protocols', 'Approved', '2025-09-01', 'No injuries');
-
--- 22. AnalyticalMethods (Core)
-INSERT INTO AnalyticalMethods (Name, Description, EquipmentID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, DetectionLimit, Accuracy, Precision, ValidationStatus, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-('GC-MS', 'Gas Chromatography-Mass Spectrometry', 3, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.5, 99.0, 'Validated', 'Approved', '2025-09-01', 'High sensitivity'),
-('HPLC', 'High-Performance Liquid Chromatography', 4, 'Admin', '2025-09-01', NULL, NULL, 0.002, 99.0, 98.5, 'Validated', 'Approved', '2025-09-01', 'High resolution'),
-('FTIR', 'Fourier Transform Infrared Spectroscopy', 3, 'Admin', '2025-09-01', NULL, NULL, 0.005, 98.5, 98.0, 'Validated', 'Approved', '2025-09-01', 'Functional group analysis'),
-('NMR', 'Nuclear Magnetic Resonance', 10, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.8, 99.5, 'Validated', 'Approved', '2025-09-01', 'Structural analysis'),
-('UV-Vis', 'Ultraviolet-Visible Spectroscopy', 17, 'Admin', '2025-09-01', NULL, NULL, 0.003, 98.0, 97.5, 'Validated', 'Approved', '2025-09-01', 'Concentration measurement'),
-('ICP-MS', 'Inductively Coupled Plasma-Mass Spectrometry', 24, 'Admin', '2025-09-01', NULL, NULL, 0.0001, 99.9, 99.8, 'Validated', 'Approved', '2025-09-01', 'Trace element analysis'),
-('GC-FID', 'Gas Chromatography-Flame Ionization Detection', 4, 'Admin', '2025-09-01', NULL, NULL, 0.002, 99.0, 98.5, 'Validated', 'Approved', '2025-09-01', 'Hydrocarbon analysis'),
-('TGA', 'Thermogravimetric Analysis', 11, 'Admin', '2025-09-01', NULL, NULL, 0.01, 98.0, 97.0, 'Validated', 'Approved', '2025-09-01', 'Thermal stability'),
-('DSC', 'Differential Scanning Calorimetry', 18, 'Admin', '2025-09-01', NULL, NULL, 0.01, 98.5, 97.5, 'Validated', 'Approved', '2025-09-01', 'Thermal properties'),
-('XRF', 'X-Ray Fluorescence', 25, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.0, 98.0, 'Validated', 'Approved', '2025-09-01', 'Elemental analysis'),
-('GC-TCD', 'Gas Chromatography-Thermal Conductivity Detection', 4, 'Admin', '2025-09-01', NULL, NULL, 0.005, 98.0, 97.0, 'Validated', 'Approved', '2025-09-01', 'Gas analysis'),
-('IR Spectroscopy', 'Infrared Spectroscopy', 3, 'Admin', '2025-09-01', NULL, NULL, 0.005, 98.5, 98.0, 'Validated', 'Approved', '2025-09-01', 'Functional group analysis'),
-('Mass Spectrometry', 'Mass Spectrometry', 10, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.5, 99.0, 'Validated', 'Approved', '2025-09-01', 'Molecular weight'),
-('Raman Spectroscopy', 'Raman Spectroscopy', 17, 'Admin', '2025-09-01', NULL, NULL, 0.003, 98.0, 97.5, 'Validated', 'Approved', '2025-09-01', 'Molecular structure'),
-('ICP-OES', 'Inductively Coupled Plasma-Optical Emission Spectroscopy', 24, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.0, 98.5, 'Validated', 'Approved', '2025-09-01', 'Elemental analysis'),
-('GC-ECD', 'Gas Chromatography-Electron Capture Detection', 4, 'Admin', '2025-09-01', NULL, NULL, 0.0001, 99.5, 99.0, 'Validated', 'Approved', '2025-09-01', 'Halogenated compounds'),
-('XPS', 'X-Ray Photoelectron Spectroscopy', 25, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.0, 98.0, 'Validated', 'Approved', '2025-09-01', 'Surface analysis'),
-('SEM', 'Scanning Electron Microscopy', 11, 'Admin', '2025-09-01', NULL, NULL, 0.01, 98.0, 97.0, 'Validated', 'Approved', '2025-09-01', 'Surface morphology'),
-('TEM', 'Transmission Electron Microscopy', 18, 'Admin', '2025-09-01', NULL, NULL, 0.01, 98.5, 97.5, 'Validated', 'Approved', '2025-09-01', 'Nanostructure analysis'),
-('XRD', 'X-Ray Diffraction', 25, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.0, 98.0, 'Validated', 'Approved', '2025-09-01', 'Crystalline structure'),
-('BET', 'Brunauer-Emmett-Teller Surface Area Analysis', 3, 'Admin', '2025-09-01', NULL, NULL, 0.01, 98.5, 97.5, 'Validated', 'Approved', '2025-09-01', 'Surface area measurement'),
-('FT-NMR', 'Fourier Transform NMR', 10, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.8, 99.5, 'Validated', 'Approved', '2025-09-01', 'Structural analysis'),
-('LC-MS', 'Liquid Chromatography-Mass Spectrometry', 4, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.5, 99.0, 'Validated', 'Approved', '2025-09-01', 'Complex mixture analysis'),
-('AAS', 'Atomic Absorption Spectroscopy', 17, 'Admin', '2025-09-01', NULL, NULL, 0.001, 99.0, 98.5, 'Validated', 'Approved', '2025-09-01', 'Metal analysis'),
-('TOC', 'Total Organic Carbon Analysis', 24, 'Admin', '2025-09-01', NULL, NULL, 0.001, 98.5, 98.0, 'Validated', 'Approved', '2025-09-01', 'Organic content');
-
--- 23. ReactionReactants (Bridge)
-INSERT INTO ReactionReactants (ReactionID, ReactantID, StoichiometricCoefficient, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Role)
-VALUES
-(1, 1, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(1, 2, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(2, 3, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(2, 4, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(3, 5, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(3, 6, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(4, 7, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(4, 8, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(5, 9, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(5, 10, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(6, 11, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(6, 12, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(7, 13, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(7, 14, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(8, 15, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(8, 16, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(9, 17, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(9, 18, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(10, 19, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(10, 20, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(11, 21, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(11, 22, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(12, 23, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant'),
-(12, 24, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Reactant'),
-(13, 25, 1.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Reactant');
-
--- 24. ReactionProducts (Bridge)
-INSERT INTO ReactionProducts (ReactionID, ProductID, StoichiometricCoefficient, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Yield)
-VALUES
-(1, 1, 1.0, 'Admin', '2025-09-01', NULL, NULL, 85.0),
-(1, 2, 1.0, 'Admin', '2025-09-01', NULL, NULL, 80.0),
-(2, 3, 1.0, 'Admin', '2025-09-01', NULL, NULL, 90.0),
-(2, 4, 1.0, 'Admin', '2025-09-01', NULL, NULL, 75.0),
-(3, 5, 1.0, 'Admin', '2025-09-01', NULL, NULL, 82.0),
-(3, 6, 1.0, 'Admin', '2025-09-01', NULL, NULL, 78.0),
-(4, 7, 1.0, 'Admin', '2025-09-01', NULL, NULL, 80.0),
-(4, 8, 1.0, 'Admin', '2025-09-01', NULL, NULL, 85.0),
-(5, 9, 1.0, 'Admin', '2025-09-01', NULL, NULL, 82.0),
-(5, 10, 1.0, 'Admin', '2025-09-01', NULL, NULL, 78.0),
-(6, 11, 1.0, 'Admin', '2025-09-01', NULL, NULL, 80.0),
-(6, 12, 1.0, 'Admin', '2025-09-01', NULL, NULL, 85.0),
-(7, 13, 1.0, 'Admin', '2025-09-01', NULL, NULL, 82.0),
-(7, 14, 1.0, 'Admin', '2025-09-01', NULL, NULL, 78.0),
-(8, 15, 1.0, 'Admin', '2025-09-01', NULL, NULL, 80.0),
-(8, 16, 1.0, 'Admin', '2025-09-01', NULL, NULL, 85.0),
-(9, 17, 1.0, 'Admin', '2025-09-01', NULL, NULL, 82.0),
-(9, 18, 1.0, 'Admin', '2025-09-01', NULL, NULL, 78.0),
-(10, 19, 1.0, 'Admin', '2025-09-01', NULL, NULL, 80.0),
-(10, 20, 1.0, 'Admin', '2025-09-01', NULL, NULL, 85.0),
-(11, 21, 1.0, 'Admin', '2025-09-01', NULL, NULL, 82.0),
-(11, 22, 1.0, 'Admin', '2025-09-01', NULL, NULL, 78.0),
-(12, 23, 1.0, 'Admin', '2025-09-01', NULL, NULL, 80.0),
-(12, 24, 1.0, 'Admin', '2025-09-01', NULL, NULL, 85.0),
-(13, 25, 1.0, 'Admin', '2025-09-01', NULL, NULL, 82.0);
-
--- 25. ReactionCatalysts (Bridge)
-INSERT INTO ReactionCatalysts (ReactionID, CatalystID, AmountUsed, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, CatalystRole)
-VALUES
-(1, 1, 10.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(1, 2, 5.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(2, 3, 8.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(2, 4, 6.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(3, 5, 12.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(3, 6, 4.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(4, 7, 10.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(4, 8, 5.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(5, 9, 8.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(5, 10, 6.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(6, 11, 12.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(6, 12, 4.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(7, 13, 10.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(7, 14, 5.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(8, 15, 8.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(8, 16, 6.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(9, 17, 12.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(9, 18, 4.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(10, 19, 10.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(10, 20, 5.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(11, 21, 8.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(11, 22, 6.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(12, 23, 12.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst'),
-(12, 24, 4.0, 'Admin', '2025-09-01', NULL, NULL, 'Secondary Catalyst'),
-(13, 25, 10.0, 'Admin', '2025-09-01', NULL, NULL, 'Primary Catalyst');
-
--- 26. ExperimentResearchers (Bridge)
-INSERT INTO ExperimentResearchers (ExperimentID, ResearcherID, Role, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
-VALUES
-(1, 1, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(1, 2, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(2, 3, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(2, 4, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(3, 5, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(3, 6, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(4, 7, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(4, 8, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(5, 9, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(5, 10, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(6, 11, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(6, 12, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(7, 13, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(7, 14, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(8, 15, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(8, 16, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(9, 17, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(9, 18, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(10, 19, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(10, 20, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(11, 21, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(11, 22, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(12, 23, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(12, 24, 'Assistant Researcher', 'Admin', '2025-09-01', NULL, NULL),
-(13, 25, 'Lead Researcher', 'Admin', '2025-09-01', NULL, NULL);
-
--- 27. ExperimentEquipment (Bridge)
-INSERT INTO ExperimentEquipment (ExperimentID, EquipmentID, UsageDetails, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
-VALUES
-(1, 1, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL),
-(1, 3, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(2, 2, 'Continuous reactor', 'Admin', '2025-09-01', NULL, NULL),
-(2, 4, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(3, 5, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(3, 10, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(4, 6, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(4, 11, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(5, 7, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(5, 12, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(6, 8, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL),
-(6, 13, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(7, 9, 'Continuous reactor', 'Admin', '2025-09-01', NULL, NULL),
-(7, 14, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(8, 10, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(8, 15, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL),
-(9, 11, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(9, 16, 'Continuous reactor', 'Admin', '2025-09-01', NULL, NULL),
-(10, 12, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(10, 17, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(11, 13, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(11, 18, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(12, 14, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(12, 19, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(13, 15, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL);
-
-USE ChemKineticsDB;
-GO
-
--- 28. ExperimentByproducts (Bridge, continued)
-INSERT INTO ExperimentByproducts (ExperimentID, ByproductID, Quantity, UnitID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
-VALUES
-(10, 20, 5.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(11, 21, 8.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(11, 22, 6.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(12, 23, 12.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(12, 24, 4.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(13, 25, 10.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(13, 1, 5.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(14, 2, 8.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(14, 3, 6.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(15, 4, 12.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(15, 5, 4.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(16, 6, 10.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(16, 7, 5.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(17, 8, 8.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(17, 9, 6.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(18, 10, 12.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(18, 11, 4.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(19, 12, 10.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(19, 13, 5.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(20, 14, 8.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(20, 15, 6.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(21, 16, 12.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(21, 17, 4.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(22, 18, 10.0, 3, 'Admin', '2025-09-01', NULL, NULL),
-(22, 19, 5.0, 3, 'Admin', '2025-09-01', NULL, NULL);
-
--- 29. ExperimentAnalyticalMethods (Bridge)
-INSERT INTO ExperimentAnalyticalMethods (ExperimentID, MethodID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Notes)
-VALUES
-(1, 1, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(1, 2, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(2, 3, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(2, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(3, 5, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(3, 6, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(4, 7, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(4, 8, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(5, 9, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(5, 10, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(6, 11, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(6, 12, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(7, 13, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(7, 14, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(8, 15, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(8, 16, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(9, 17, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(9, 18, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(10, 19, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(10, 20, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(11, 21, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(11, 22, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(12, 23, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method'),
-(12, 24, 'Admin', '2025-09-01', NULL, NULL, 'Secondary analysis method'),
-(13, 25, 'Admin', '2025-09-01', NULL, NULL, 'Primary analysis method');
-
--- 30. ReactionSafetyHazards (Bridge)
-INSERT INTO ReactionSafetyHazards (ReactionID, HazardID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Notes)
-VALUES
-(1, 1, 'Admin', '2025-09-01', NULL, NULL, 'High pressure risk'),
-(1, 2, 'Admin', '2025-09-01', NULL, NULL, 'Flammable materials'),
-(2, 3, 'Admin', '2025-09-01', NULL, NULL, 'Corrosive chemicals'),
-(2, 4, 'Admin', '2025-09-01', NULL, NULL, 'Toxic byproducts'),
-(3, 5, 'Admin', '2025-09-01', NULL, NULL, 'High temperature risk'),
-(3, 6, 'Admin', '2025-09-01', NULL, NULL, 'Explosion risk'),
-(4, 7, 'Admin', '2025-09-01', NULL, NULL, 'Chemical spill risk'),
-(4, 8, 'Admin', '2025-09-01', NULL, NULL, 'Gas release risk'),
-(5, 9, 'Admin', '2025-09-01', NULL, NULL, 'Flammable gas risk'),
-(5, 10, 'Admin', '2025-09-01', NULL, NULL, 'Corrosive liquid risk'),
-(6, 11, 'Admin', '2025-09-01', NULL, NULL, 'Toxic gas risk'),
-(6, 12, 'Admin', '2025-09-01', NULL, NULL, 'High pressure risk'),
-(7, 13, 'Admin', '2025-09-01', NULL, NULL, 'Flammable liquid risk'),
-(7, 14, 'Admin', '2025-09-01', NULL, NULL, 'Chemical exposure risk'),
-(8, 15, 'Admin', '2025-09-01', NULL, NULL, 'Explosion risk'),
-(8, 16, 'Admin', '2025-09-01', NULL, NULL, 'High temperature risk'),
-(9, 17, 'Admin', '2025-09-01', NULL, NULL, 'Corrosive gas risk'),
-(9, 18, 'Admin', '2025-09-01', NULL, NULL, 'Toxic liquid risk'),
-(10, 19, 'Admin', '2025-09-01', NULL, NULL, 'Flammable gas risk'),
-(10, 20, 'Admin', '2025-09-01', NULL, NULL, 'High pressure risk'),
-(11, 21, 'Admin', '2025-09-01', NULL, NULL, 'Chemical spill risk'),
-(11, 22, 'Admin', '2025-09-01', NULL, NULL, 'Gas release risk'),
-(12, 23, 'Admin', '2025-09-01', NULL, NULL, 'Flammable liquid risk'),
-(12, 24, 'Admin', '2025-09-01', NULL, NULL, 'Corrosive liquid risk'),
-(13, 25, 'Admin', '2025-09-01', NULL, NULL, 'Toxic gas risk');
-
--- 31. ReactionIntermediates (Core)
-INSERT INTO ReactionIntermediates (ReactionID, Name, MolecularFormula, MolecularWeight, CASNumber, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsStable, DetectionMethod, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-(1, 'Ethyl Radical', 'C2H5', 29.06, '2025-62-7', 'Admin', '2025-09-01', NULL, NULL, 0, 'GC-MS', 'Approved', '2025-09-01', 'Highly reactive'),
-(2, 'Carbocation A', 'C3H7+', 43.09, '19252-53-0', 'Admin', '2025-09-01', NULL, NULL, 0, 'NMR', 'Approved', '2025-09-01', 'Unstable intermediate'),
-(3, 'Vinyl Radical', 'C2H3', 27.05, '3744-21-6', 'Admin', '2025-09-01', NULL, NULL, 0, 'FTIR', 'Approved', '2025-09-01', 'Reactive species'),
-(4, 'Benzyl Radical', 'C7H7', 91.13, '2154-56-5', 'Admin', '2025-09-01', NULL, NULL, 0, 'GC-MS', 'Approved', '2025-09-01', 'Short-lived'),
-(5, 'Peroxide Intermediate', 'ROOR', 62.07, '123-45-6', 'Admin', '2025-09-01', NULL, NULL, 0, 'HPLC', 'Approved', '2025-09-01', 'Oxidative species'),
-(6, 'Carbanion A', 'C3H7-', 43.09, '1724-46-5', 'Admin', '2025-09-01', NULL, NULL, 0, 'NMR', 'Approved', '2025-09-01', 'Unstable intermediate'),
-(7, 'Alkyl Radical', 'C4H9', 57.11, '3744-22-7', 'Admin', '2025-09-01', NULL, NULL, 0, 'GC-MS', 'Approved', '2025-09-01', 'Reactive species'),
-(8, 'Cyclohexyl Radical', 'C6H11', 83.15, '3170-58-9', 'Admin', '2025-09-01', NULL, NULL, 0, 'FTIR', 'Approved', '2025-09-01', 'Short-lived'),
-(9, 'Ester Intermediate', 'C4H8O2', 88.11, '123-45-7', 'Admin', '2025-09-01', NULL, NULL, 1, 'HPLC', 'Approved', '2025-09-01', 'Stable intermediate'),
-(10, 'Hydroxyl Radical', 'OH', 17.01, '3352-57-6', 'Admin', '2025-09-01', NULL, NULL, 0, 'UV-Vis', 'Approved', '2025-09-01', 'Highly reactive'),
-(11, 'Ketone Intermediate', 'C3H6O', 58.08, '67-64-1', 'Admin', '2025-09-01', NULL, NULL, 1, 'GC-MS', 'Approved', '2025-09-01', 'Stable intermediate'),
-(12, 'Protonated Species', 'H3O+', 19.02, '13968-08-6', 'Admin', '2025-09-01', NULL, NULL, 0, 'NMR', 'Approved', '2025-09-01', 'Unstable intermediate'),
-(13, 'Fatty Acid Radical', 'C16H31O2', 255.42, '123-45-8', 'Admin', '2025-09-01', NULL, NULL, 0, 'HPLC', 'Approved', '2025-09-01', 'Reactive species'),
-(14, 'Sulfur Radical', 'S', 32.06, '7704-34-9', 'Admin', '2025-09-01', NULL, NULL, 0, 'GC-MS', 'Approved', '2025-09-01', 'Short-lived'),
-(15, 'Amine Intermediate', 'C2H7N', 45.08, '75-04-7', 'Admin', '2025-09-01', NULL, NULL, 1, 'NMR', 'Approved', '2025-09-01', 'Stable intermediate'),
-(16, 'Halogenated Radical', 'C2H4Cl', 62.50, '123-45-9', 'Admin', '2025-09-01', NULL, NULL, 0, 'GC-MS', 'Approved', '2025-09-01', 'Reactive species'),
-(17, 'Nitro Intermediate', 'C6H5NO2', 123.11, '98-95-3', 'Admin', '2025-09-01', NULL, NULL, 1, 'HPLC', 'Approved', '2025-09-01', 'Stable intermediate'),
-(18, 'Sulfonic Acid Radical', 'C6H5SO3', 141.15, '123-46-0', 'Admin', '2025-09-01', NULL, NULL, 0, 'NMR', 'Approved', '2025-09-01', 'Unstable intermediate'),
-(19, 'Enzyme Intermediate', 'C6H12O6', 180.16, '50-99-7', 'Admin', '2025-09-01', NULL, NULL, 1, 'HPLC', 'Approved', '2025-09-01', 'Stable intermediate'),
-(20, 'Excited State Molecule', 'C6H6*', 78.11, '71-43-2', 'Admin', '2025-09-01', NULL, NULL, 0, 'UV-Vis', 'Approved', '2025-09-01', 'Short-lived'),
-(21, 'Electron Transfer Complex', 'C6H12', 84.16, '110-82-7', 'Admin', '2025-09-01', NULL, NULL, 0, 'NMR', 'Approved', '2025-09-01', 'Unstable intermediate'),
-(22, 'Reduced Species', 'C2H6O', 46.07, '64-17-5', 'Admin', '2025-09-01', NULL, NULL, 1, 'GC-MS', 'Approved', '2025-09-01', 'Stable intermediate'),
-(23, 'Aldehyde Intermediate', 'C3H6O', 58.08, '123-38-6', 'Admin', '2025-09-01', NULL, NULL, 1, 'HPLC', 'Approved', '2025-09-01', 'Stable intermediate'),
-(24, 'Acyl Radical', 'C3H5O', 57.07, '123-46-1', 'Admin', '2025-09-01', NULL, NULL, 0, 'GC-MS', 'Approved', '2025-09-01', 'Reactive species'),
-(25, 'Alcohol Intermediate', 'C2H6O', 46.07, '64-17-5', 'Admin', '2025-09-01', NULL, NULL, 1, 'NMR', 'Approved', '2025-09-01', 'Stable intermediate');
-
--- 32. ReactionSolvents (Bridge)
-INSERT INTO ReactionSolvents (ReactionID, SolventID, Volume, UnitID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, Notes)
-VALUES
-(1, 1, 100.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(1, 2, 50.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(2, 3, 80.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(2, 4, 60.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(3, 5, 120.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(3, 6, 40.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(4, 7, 100.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(4, 8, 50.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(5, 9, 80.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(5, 10, 60.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(6, 11, 120.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(6, 12, 40.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(7, 13, 100.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(7, 14, 50.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(8, 15, 80.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(8, 16, 60.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(9, 17, 120.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(9, 18, 40.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(10, 19, 100.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(10, 20, 50.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(11, 21, 80.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(11, 22, 60.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(12, 23, 120.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent'),
-(12, 24, 40.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Secondary solvent'),
-(13, 25, 100.0, 4, 'Admin', '2025-09-01', NULL, NULL, 'Primary solvent');
-
--- 33. ExperimentResults (Core)
-INSERT INTO ExperimentResults (ExperimentID, ResultDescription, Yield, UnitID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, ValidationStatus, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-(1, 'High yield of ethylene', 85.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Successful experiment'),
-(2, 'Moderate yield of propylene', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(3, 'Good yield of butene', 82.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(4, 'High yield of gasoline', 90.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Optimized process'),
-(5, 'Moderate yield of diesel', 78.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(6, 'Good yield of kerosene', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(7, 'High yield of aromatics', 85.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Successful experiment'),
-(8, 'Moderate yield of olefins', 82.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(9, 'Good yield of polymers', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(10, 'High yield of ethanol', 85.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Optimized process'),
-(11, 'Moderate yield of methanol', 78.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(12, 'Good yield of acetic acid', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(13, 'High yield of formaldehyde', 82.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Successful experiment'),
-(14, 'Moderate yield of acetone', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(15, 'Good yield of benzene', 85.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(16, 'High yield of toluene', 82.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Optimized process'),
-(17, 'Moderate yield of xylene', 78.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(18, 'Good yield of ethylene glycol', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(19, 'High yield of propylene glycol', 85.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Successful experiment'),
-(20, 'Moderate yield of glycerol', 82.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(21, 'Good yield of butanol', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(22, 'High yield of isobutanol', 85.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Optimized process'),
-(23, 'Moderate yield of pentanol', 78.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Stable results'),
-(24, 'Good yield of hexanol', 80.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Consistent results'),
-(25, 'High yield of heptanol', 82.0, 5, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Successful experiment');
-
--- 34. ProcessParameters (Core)
-INSERT INTO ProcessParameters (ReactionID, ParameterName, Value, UnitID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsCritical, Tolerance, MeasurementMethod, CalibrationStatus, ApprovalStatus, LastValidatedDate, ParameterCategory, Notes)
-VALUES
-(1, 'Flow Rate', 100.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(1, 'Residence Time', 10.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(2, 'Flow Rate', 120.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(2, 'Residence Time', 12.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(3, 'Flow Rate', 80.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(3, 'Residence Time', 8.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(4, 'Flow Rate', 150.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(4, 'Residence Time', 15.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(5, 'Flow Rate', 90.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(5, 'Residence Time', 9.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(6, 'Flow Rate', 110.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(6, 'Residence Time', 11.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(7, 'Flow Rate', 100.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(7, 'Residence Time', 10.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(8, 'Flow Rate', 120.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(8, 'Residence Time', 12.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(9, 'Flow Rate', 80.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(9, 'Residence Time', 8.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(10, 'Flow Rate', 150.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(10, 'Residence Time', 15.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(11, 'Flow Rate', 90.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(11, 'Residence Time', 9.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(12, 'Flow Rate', 110.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(12, 'Residence Time', 11.0, 7, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Timer', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter'),
-(13, 'Flow Rate', 100.0, 6, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Flow Meter', 'Calibrated', 'Approved', '2025-09-01', 'Process', 'Critical parameter');
-
--- 35. ReactionConditions (Core)
-INSERT INTO ReactionConditions (ReactionID, ParameterName, Value, UnitID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsCritical, Tolerance, MeasurementMethod, CalibrationStatus, ApprovalStatus, LastValidatedDate, ParameterCategory, Notes)
-VALUES
-(1, 'Temperature', 400.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(1, 'Pressure', 5.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(2, 'Temperature', 350.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(2, 'Pressure', 10.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(3, 'Temperature', 300.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(3, 'Pressure', 15.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(4, 'Temperature', 450.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(4, 'Pressure', 20.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(5, 'Temperature', 400.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(5, 'Pressure', 5.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(6, 'Temperature', 350.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(6, 'Pressure', 10.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(7, 'Temperature', 300.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(7, 'Pressure', 15.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(8, 'Temperature', 400.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(8, 'Pressure', 5.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(9, 'Temperature', 350.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(9, 'Pressure', 10.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(10, 'Temperature', 300.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(10, 'Pressure', 15.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(11, 'Temperature', 400.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(11, 'Pressure', 5.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(12, 'Temperature', 350.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(12, 'Pressure', 10.0, 2, 'Admin', '2025-09-01', NULL, NULL, 1, 0.5, 'Pressure Gauge', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter'),
-(13, 'Temperature', 300.0, 1, 'Admin', '2025-09-01', NULL, NULL, 1, 5.0, 'Thermocouple', 'Calibrated', 'Approved', '2025-09-01', 'Physical', 'Critical parameter');
-
--- 36. ReactionEquipment (Bridge)
-INSERT INTO ReactionEquipment (ReactionID, EquipmentID, UsageDetails, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
-VALUES
-(1, 1, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL),
-(1, 3, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(2, 2, 'Continuous reactor', 'Admin', '2025-09-01', NULL, NULL),
-(2, 4, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(3, 5, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(3, 10, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(4, 6, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(4, 11, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(5, 7, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(5, 12, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(6, 8, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL),
-(6, 13, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(7, 9, 'Continuous reactor', 'Admin', '2025-09-01', NULL, NULL),
-(7, 14, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(8, 10, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(8, 15, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL),
-(9, 11, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(9, 16, 'Continuous reactor', 'Admin', '2025-09-01', NULL, NULL),
-(10, 12, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(10, 17, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(11, 13, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(11, 18, 'Analytical equipment', 'Admin', '2025-09-01', NULL, NULL),
-(12, 14, 'Temperature control', 'Admin', '2025-09-01', NULL, NULL),
-(12, 19, 'Fluid transfer', 'Admin', '2025-09-01', NULL, NULL),
-(13, 15, 'Main reactor', 'Admin', '2025-09-01', NULL, NULL);
-
--- 37. ReactionPathways (Core)
-INSERT INTO ReactionPathways (ReactionID, PathwayDescription, EnergyBarrier, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, IsPreferred, ValidationStatus, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-(1, 'Radical initiation pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(1, 'Alternative radical pathway', 55.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(2, 'Cationic polymerization pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(2, 'Anionic polymerization pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(3, 'Hydrogen addition pathway', 40.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(3, 'Alternative addition pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(4, 'Dehydrogenation pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(4, 'Alternative dehydrogenation pathway', 55.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(5, 'Oxidation pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(5, 'Alternative oxidation pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(6, 'Isomerization pathway', 40.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(6, 'Alternative isomerization pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(7, 'Alkylation pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(7, 'Alternative alkylation pathway', 55.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(8, 'Dehydrogenation pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(8, 'Alternative dehydrogenation pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(9, 'Esterification pathway', 40.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(9, 'Alternative esterification pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(10, 'Hydrolysis pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(10, 'Alternative hydrolysis pathway', 55.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(11, 'Condensation pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(11, 'Alternative condensation pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(12, 'Neutralization pathway', 40.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway'),
-(12, 'Alternative neutralization pathway', 45.0, 'Admin', '2025-09-01', NULL, NULL, 0, 'Validated', 'Approved', '2025-09-01', 'Less favorable'),
-(13, 'Saponification pathway', 50.0, 'Admin', '2025-09-01', NULL, NULL, 1, 'Validated', 'Approved', '2025-09-01', 'Preferred pathway');
-
--- 38. ReactionEnergyProfile (Core)
-INSERT INTO ReactionEnergyProfile (ReactionID, EnergyType, Value, UnitID, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, ValidationStatus, ApprovalStatus, LastValidatedDate, Notes)
-VALUES
-(1, 'Activation Energy', 50.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(1, 'Reaction Enthalpy', -20.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(2, 'Activation Energy', 45.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(2, 'Reaction Enthalpy', -15.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(3, 'Activation Energy', 40.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(3, 'Reaction Enthalpy', -10.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(4, 'Activation Energy', 55.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(4, 'Reaction Enthalpy', -25.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(5, 'Activation Energy', 50.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(5, 'Reaction Enthalpy', -20.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(6, 'Activation Energy', 45.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(6, 'Reaction Enthalpy', -15.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(7, 'Activation Energy', 40.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(7, 'Reaction Enthalpy', -10.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(8, 'Activation Energy', 50.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(8, 'Reaction Enthalpy', -20.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(9, 'Activation Energy', 45.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(9, 'Reaction Enthalpy', -15.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(10, 'Activation Energy', 40.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(10, 'Reaction Enthalpy', -10.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(11, 'Activation Energy', 50.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(11, 'Reaction Enthalpy', -20.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(12, 'Activation Energy', 45.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier'),
-(12, 'Reaction Enthalpy', -15.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Exothermic'),
-(13, 'Activation Energy', 40.0, 8, 'Admin', '2025-09-01', NULL, NULL, 'Validated', 'Approved', '2025-09-01', 'Primary barrier');
-
--- 39. ExperimentLogs (Core)
-INSERT INTO ExperimentLogs (ExperimentID, LogDate, LogMessage, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, LogType, Notes)
-VALUES
-(1, '2025-09-01', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(1, '2025-09-01', 'Pressure stabilized', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(2, '2025-09-02', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(2, '2025-09-02', 'Temperature reached setpoint', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(3, '2025-09-03', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(3, '2025-09-03', 'Flow rate adjusted', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(4, '2025-09-04', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(4, '2025-09-04', 'Catalyst added', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(5, '2025-09-05', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(5, '2025-09-05', 'Reaction completed', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(6, '2025-09-06', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(6, '2025-09-06', 'Pressure stabilized', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(7, '2025-09-07', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(7, '2025-09-07', 'Temperature reached setpoint', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(8, '2025-09-08', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(8, '2025-09-08', 'Flow rate adjusted', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(9, '2025-09-09', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(9, '2025-09-09', 'Catalyst added', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(10, '2025-09-10', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(10, '2025-09-10', 'Reaction completed', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(11, '2025-09-11', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(11, '2025-09-11', 'Pressure stabilized', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(12, '2025-09-12', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log'),
-(12, '2025-09-12', 'Temperature reached setpoint', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Process update'),
-(13, '2025-09-13', 'Experiment started', 'Admin', '2025-09-01', NULL, NULL, 'Info', 'Initial log');
-
--- 40. ReactionReferences (Core)
-INSERT INTO ReactionReferences (ReactionID, ReferenceTitle, ReferenceURL, PublicationDate, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate, ReferenceType, Notes)
-VALUES
-(1, 'Catalytic Cracking Study', 'http://example.com/ref1', '2025-01-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(1, 'Catalytic Cracking Review', 'http://example.com/ref2', '2025-02-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(2, 'Polymerization Mechanism', 'http://example.com/ref3', '2025-03-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(2, 'Polymerization Overview', 'http://example.com/ref4', '2025-04-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(3, 'Hydrogenation Study', 'http://example.com/ref5', '2025-05-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(3, 'Hydrogenation Review', 'http://example.com/ref6', '2025-06-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(4, 'Reforming Study', 'http://example.com/ref7', '2025-07-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(4, 'Reforming Overview', 'http://example.com/ref8', '2025-08-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(5, 'Oxidation Mechanism', 'http://example.com/ref9', '2025-09-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(5, 'Oxidation Review', 'http://example.com/ref10', '2025-10-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(6, 'Isomerization Study', 'http://example.com/ref11', '2025-11-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(6, 'Isomerization Overview', 'http://example.com/ref12', '2025-12-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(7, 'Alkylation Study', 'http://example.com/ref13', '2026-01-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(7, 'Alkylation Review', 'http://example.com/ref14', '2026-02-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(8, 'Dehydrogenation Study', 'http://example.com/ref15', '2026-03-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(8, 'Dehydrogenation Overview', 'http://example.com/ref16', '2026-04-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(9, 'Esterification Study', 'http://example.com/ref17', '2026-05-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(9, 'Esterification Review', 'http://example.com/ref18', '2026-06-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(10, 'Hydrolysis Study', 'http://example.com/ref19', '2026-07-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(10, 'Hydrolysis Review', 'http://example.com/ref20', '2026-08-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(11, 'Condensation Study', 'http://example.com/ref21', '2026-09-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(11, 'Condensation Review', 'http://example.com/ref22', '2026-10-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(12, 'Neutralization Study', 'http://example.com/ref23', '2026-11-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference'),
-(12, 'Neutralization Review', 'http://example.com/ref24', '2026-12-01', 'Admin', '2025-09-01', NULL, NULL, 'Review', 'Secondary reference'),
-(13, 'Saponification Study', 'http://example.com/ref25', '2027-01-01', 'Admin', '2025-09-01', NULL, NULL, 'Journal', 'Primary reference');
-
-USE ChemKineticsDB;
-GO
-
--- Clear existing data in Units table to avoid conflicts (optional, depending on your setup)
-DELETE FROM Units;
-DBCC CHECKIDENT ('Units', RESEED, 0);
-GO
 
 -- 1. Units (Lookup)
 INSERT INTO Units (
@@ -2580,6 +1904,71 @@ SELECT* FROM ErrorLog;
 --8. Experiment_Catalyst
 SELECT* FROM Experiment_Catalyst;
 
---
+--9. Experiment_Condition
+SELECT*FROM Experiment_Condition;
+
+--10. Experiment_Equipment
+SELECT*FROM Experiment_Equipment;
+
+--11. Experiment_Product
+SELECT*FROM Experiment_Product;
+
+--12. Experiment_Reactant
+SELECT*FROM Experiment_Reactant;
+
+--13. Experiment_Researcher
+SELECT*FROM Experiment_Researcher;
+
+--14. ExperimentNotes
+SELECT*FROM ExperimentNotes;
+
+--15. ExperimentDataSources
+SELECT*FROM ExperimentDataSources;
+
+--16. Locations
+SELECT*FROM Locations;
+
+--17. Products
+SELECT*FROM Products;
+
+--18. Reactants
+SELECT*FROM Reactants;
+
+--19. Researchers
+SELECT*FROM Researchers;
+
+--20. Suppliers
+SELECT*FROM Suppliers;
+
+--21. Units
+SELECT*FROM Units;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
